@@ -41,4 +41,14 @@ jobs:
         run: |
           aws lambda get-function --function-name periodo-demonstrativo || \
           aws lambda create-function --function-name periodo-demonstrativo --runtime python3.8 --role arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/lambda_exec_role_NkIxpPdd --handler lambda_function.lambda_handler --zip-file fileb://lambda_function.zip
+          
+      - name: Wait for Lambda function creation
+        run: |
+          while [[ $(aws lambda get-function --function-name periodo-demonstrativo --query 'Configuration.State') == '"Pending"' ]]; do
+            echo "Waiting for Lambda function to be created..."
+            sleep 10
+          done
+
+      - name: Update Lambda function code
+        run: |
           aws lambda update-function-code --function-name periodo-demonstrativo --zip-file fileb://lambda_function.zip
