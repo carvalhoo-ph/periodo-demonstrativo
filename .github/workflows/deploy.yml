@@ -39,4 +39,6 @@ jobs:
 
       - name: Deploy to AWS Lambda
         run: |
+          aws lambda get-function --function-name periodo-demonstrativo || \
+          aws lambda create-function --function-name periodo-demonstrativo --runtime python3.8 --role arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/your-lambda-role --handler lambda_function.lambda_handler --zip-file fileb://lambda_function.zip
           aws lambda update-function-code --function-name periodo-demonstrativo --zip-file fileb://lambda_function.zip
