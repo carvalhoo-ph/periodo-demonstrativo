@@ -52,6 +52,13 @@ jobs:
         run: |
           aws lambda update-function-code --function-name periodo-demonstrativo --zip-file fileb://lambda_function.zip
 
+      - name: Wait for Lambda function update
+        run: |
+          while [[ $(aws lambda get-function --function-name periodo-demonstrativo --query 'Configuration.LastUpdateStatus') == '"InProgress"' ]]; do
+            echo "Waiting for Lambda function update to complete..."
+            sleep 10
+          done
+
       - name: Update Lambda function configuration
         run: |
           aws lambda update-function-configuration --function-name periodo-demonstrativo --timeout 15
