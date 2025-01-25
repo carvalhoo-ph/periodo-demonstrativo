@@ -15,7 +15,13 @@ def lambda_handler(event, context):
     
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT ano, mes FROM periodo_demonstrativo WHERE cpf = %s"
+            # Ajuste a consulta SQL para buscar os períodos da tabela demonstrativos_pagamento
+            sql = """
+                SELECT dp.ano, dp.mes
+                FROM demonstrativos_pagamento dp
+                JOIN ex_funcionarios ef ON dp.ex_funcionario_id = ef.id
+                WHERE ef.cpf = %s
+            """
             cursor.execute(sql, (cpf,))
             result = cursor.fetchall()
         
