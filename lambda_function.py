@@ -3,7 +3,8 @@ import psycopg2
 from config import rds_host, db_username, db_password, db_name
 
 def lambda_handler(event, context):
-    cpf = event['cpf']
+    # Extrair o parâmetro 'cpf' dos parâmetros de consulta
+    cpf = event['queryStringParameters']['cpf']
     
     # Conexão com o banco de dados
     connection = psycopg2.connect(
